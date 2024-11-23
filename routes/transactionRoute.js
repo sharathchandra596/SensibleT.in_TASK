@@ -1,12 +1,13 @@
 import exppress from "express"
-import { addTransaction, gellAllTransactions, updateTransaction } from "../controller/transactionController.js";
+import { addTransaction, gellAllTransactionsOfUser, updateTransaction } from "../controller/transactionController.js";
 
 
 const router= exppress.Router();
 
 
 router.post("/create",addTransaction);
-router.get("/all",gellAllTransactions);
+router.get("/all/:id",gellAllTransactionsOfUser);
 router.put("/update/:id",updateTransaction);
+router.get("/:id",gellTransactionDetails);
 
 export default router;

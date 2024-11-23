@@ -39,13 +39,23 @@ export const addTransaction = async (req, res, next) => {
 }
 
 
-export const gellAllTransactions = async (req, res, next) => {
+export const gellAllTransactionsOfUser = async (req, res, next) => {
     try {
+        const { id } = req.params
 
-        const allTransactions = await Transaction.find()
+        const allTransactions = await Transaction.find({ user: id })
+
+        const transformData = allTransactions.map((item) => ({
+            transaction_id: item._id,
+            amount: item.amount,
+            transaction_type: item.transaction_type,
+            status: item.status,
+            timestamp: item.timestamp
+        }))
+
         res.status(200).json({
             success: true,
-            data: allTransactions
+            data: transformData
         })
 
     } catch (error) {
@@ -57,20 +67,20 @@ export const updateTransaction = async (req, res, next) => {
     try {
 
         const { id } = req.params
-        const { amount, transaction_type, user, status } = req.body
+        const { status } = req.body
 
-        if (!amount || !transaction_type || !user || !status) {
+        if (!status) {
             return res.status(400).json({
                 success: false,
-                message: "All fields are required"
+                message: "staus required"
             })
         }
 
-        const updatedTransaction = await Transaction.findByIdAndUpdate(id, { amount, transaction_type, user, status }, { new: true })
+        const updatedTransaction = await Transaction.findByIdAndUpdate(id, { status }, { new: true })
         return res.status(200).json({
             success: true,
             message: "Transaction updated successfully",
-            data:  {
+            data: {
                 transaction_id: updatedTransaction._id,
 
                 amount: updatedTransaction.amount,
@@ -90,3 +100,26 @@ export const updateTransaction = async (req, res, next) => {
     }
 }
 
+export const gellTransactionDetails = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const transaction = await Transaction.findById(id)
+        return res.status(200).json({
+            success: true,
+            data:
+            {
+                transaction_id: transaction._id,
+
+                amount: transaction.amount,
+
+                transaction_type: transaction.transaction_type,
+
+                    status: transaction.status,
+
+                timestamp: transaction.timestamp
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
