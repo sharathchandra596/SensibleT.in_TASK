@@ -1,5 +1,5 @@
 import exppress from "express"
-import { addTransaction, gellAllTransactionsOfUser, updateTransaction } from "../controller/transactionController.js";
+import { addTransaction, gellAllTransactionsOfUser, gellTransactionDetails, updateTransaction } from "../controller/transactionController.js";
 
 
 const router= exppress.Router();
